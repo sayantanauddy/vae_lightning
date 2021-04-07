@@ -4,7 +4,7 @@ This repository contains code for creating and training a variational auto encod
 
 New stuff:
 - Use PyTorch Lightning for training the VAE
-- An alternative Dataset class for the CelebA dataset that downloads the data from Kaggle. The version of this dataset provided in `torchvision.datasets` [(link)](https://pytorch.org/vision/stable/datasets.html#celeba) does not currently work as expected. Read more about the issue [here](https://github.com/pytorch/vision/issues/2262).
+- An alternative Dataset class for the CelebA dataset that downloads the data from Kaggle. The version of this dataset provided in `torchvision.datasets` [(link)](https://pytorch.org/vision/stable/datasets.html#celeba) does not currently work as expected. Read more about the issue [here](https://github.com/pytorch/vision/issues/2262). The `CelebADataset` Dataset class provided in this repository is adapted from the `torchvision.datasets.CelebA` class.
 
 ## Training
 
