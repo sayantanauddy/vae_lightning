@@ -1,0 +1,7 @@
+pytorch_lightning
+torch
+pandas==1.2.3
+kaggle==1.5.12
+torchvision
+numpy==1.20.1
+Pillow==8.2.0
