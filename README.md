@@ -4,6 +4,13 @@ This repository contains code for creating and training a variational auto encod
 
 New stuff:
 - Use PyTorch Lightning for training the VAE
-- An alternative Dataset class for the CelebA dataset that downloads the data from Kaggle. The version of this dataset provided in `torchvision.datasets` [link](https://pytorch.org/vision/stable/datasets.html#celeba) does not currently work as expected. Read more about the issue [here](https://github.com/pytorch/vision/issues/2262).
+- An alternative Dataset class for the CelebA dataset that downloads the data from Kaggle. The version of this dataset provided in `torchvision.datasets` [(link)](https://pytorch.org/vision/stable/datasets.html#celeba) does not currently work as expected. Read more about the issue [here](https://github.com/pytorch/vision/issues/2262).
+
+## Training
+
+```python
+python train_vae_perceptual.py --seed 100 --batch_size 32 --download True --epochs 20 --lr 0.0001
+```
+Use `python train_vae_perceptual.py --help` to see all available flags.
 
 This is a WIP and the code and documentation will be updated.
