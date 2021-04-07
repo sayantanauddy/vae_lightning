@@ -1,2 +1,9 @@
-# vae_lightning
-Variational Auto Encoders with PyTorch Lightning
+# Variational Auto Encoders with PyTorch Lightning
+
+This repository contains code for creating and training a variational auto encoder using [PyTorch Lightning](https://pytorch-lightning.readthedocs.io). The VAE being trained here is a Res-Net Style VAE with an adjustable perception loss using a pre-trained vgg19. The code for the core VAE architecture is from [this excellent repository](https://github.com/LukeDitria/CNN-VAE).
+
+New stuff:
+- Use PyTorch Lightning for training the VAE
+- An alternative Dataset class for the CelebA dataset that downloads the data from Kaggle. The version of this dataset provided in `torchvision.datasets` [link](https://pytorch.org/vision/stable/datasets.html#celeba) does not currently work as expected. Read more about the issue [here](https://github.com/pytorch/vision/issues/2262).
+
+This is a WIP and the code and documentation will be updated.
