@@ -15,7 +15,7 @@ Use `python train_vae_perceptual.py --help` to see all available flags.
 
 To train using all available GPUs use `--gpus -1`. See [here](https://pytorch-lightning.readthedocs.io/en/stable/advanced/multi_gpu.html#select-gpu-devices) for all possible options.
 ```python
-python train_vae_perceptual.py --seed 100 --batch_size 32 --download True --epochs 20 --lr 0.0001
+python train_vae_perceptual.py --seed 100 --batch_size 32 --download True --epochs 20 --lr 0.0001 --gpus -1
 ```
 
 To train on CPUs use `--gpus 0`
