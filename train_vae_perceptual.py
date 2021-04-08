@@ -4,6 +4,7 @@ import random
 from pathlib import Path
 from datetime import datetime
 from argparse import ArgumentParser
+from pytorch_lightning.core import hooks
 
 import torch
 from torchvision import transforms
@@ -16,6 +17,8 @@ from pytorch_lightning import Trainer, seed_everything
 
 from data import CelebADataModule
 from model import VAELightningModule
+from utils import reconstruct_samples, generate_samples
+
 
 def main(args):
 
@@ -53,14 +56,15 @@ def main(args):
                                  num_workers=args.num_workers)
 
     # Init ModelCheckpoint callback, monitoring 'val_loss'
-    checkpoint_callback = ModelCheckpoint(
-        monitor='val_loss',
-        dirpath=os.path.join(args.log_dir, exp_name, version, "checkpoints"),
-        filename='best-{epoch:02d}-{val_acc:.2f}',
-        save_top_k=1,  # Saves the best model
-        save_last=True,  # Saves the latest model to resume training
-        mode='min',
-    )
+    checkpoint_callback = ModelCheckpoint(monitor='val_loss',
+                                          dirpath=os.path.join(
+                                              args.log_dir, exp_name, version, "checkpoints"),
+                                          filename='best-{epoch:02d}-{val_loss:.2f}',
+                                          save_top_k=1,     # Saves the best model
+                                          save_last=True,  # Saves the latest model to resume training if True
+                                          mode='min',
+                                          save_weights_only=False
+                                          )
 
     # Create a logger to explicitly set the path
     logger = TensorBoardLogger(save_dir=args.log_dir, name=exp_name, version=version)
@@ -75,7 +79,7 @@ def main(args):
         trainer = Trainer(default_root_dir=args.log_dir,
                           max_epochs=args.epochs,
                           callbacks=[checkpoint_callback],
-                          resume_from_checkpoint=resume_checkpoint,
+                          resume_from_checkpoint=args.resume_checkpoint,
                           logger=logger,
                           gpus=args.gpus)
     else:
@@ -88,9 +92,20 @@ def main(args):
                           callbacks=[checkpoint_callback],
                           logger=logger,
                           gpus=args.gpus)
-        
+    
+    # Start training
     trainer.fit(model, celebA_dm)
 
+    # Image reconstruction and generation using best model
+    reconstruct_samples(checkpoint_path=checkpoint_callback.best_model_path, 
+                        val_transform=val_transform, 
+                        save_dir="plots", 
+                        num_samples=16)
+
+    generate_samples(checkpoint_path=checkpoint_callback.best_model_path,
+                     z=args.z, 
+                     num_samples=16, 
+                     save_dir="plots")
 
 if __name__ == "__main__":
 
@@ -108,7 +123,7 @@ if __name__ == "__main__":
     # The below PR, when completed, would enable a cleaner way of doing this
     # https://github.com/PyTorchLightning/pytorch-lightning/pull/3792
     # Data level hyperparameters are not automatically saved
-    parser.add_argument('--batch_size', type=int, default=4)
+    parser.add_argument('--batch_size', type=int, default=64)
     parser.add_argument('--data_dir', type=str, default="dataset")
     parser.add_argument('--target_type', type=str, default="attr")
     parser.add_argument('--download', type=bool, default=False)

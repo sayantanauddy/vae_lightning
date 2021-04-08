@@ -153,12 +153,12 @@ class VAELightningModule(pl.LightningModule):
         self.lr = args.lr
         self.perceptual_net_name = args.perceptual_net_name
         if self.perceptual_net_name == 'vgg19':
-            self.perceptual_net = models.vgg19(pretrained=True)
-            self.perceptual_net = self.perceptual_net.eval()
-            for p in self.perceptual_net.parameters():
+            perceptual_net = models.vgg19(pretrained=True)
+            perceptual_net = perceptual_net.eval()
+            for p in perceptual_net.parameters():
                 p.requires_grad = False
         else:
-            raise NotImplementedError(f"Unknown model {perceptual_net_name}")
+            raise NotImplementedError(f"Unknown model {args.perceptual_net_name}")
         self.perceptual_depth = args.perceptual_depth
         self.kl_weight = args.kl_weight
         self.perceptual_weight = args.perceptual_weight
@@ -174,8 +174,8 @@ class VAELightningModule(pl.LightningModule):
         # pretrained network
         layers = []
         for i in range(self.perceptual_depth):
-            layers.append(self.perceptual_net.features[i])
-            if isinstance(self.perceptual_net.features[i], nn.ReLU):
+            layers.append(perceptual_net.features[i])
+            if isinstance(perceptual_net.features[i], nn.ReLU):
                 layers.append(GetFeatures())
         self.perceptual_feature_extractor = nn.Sequential(*layers)
 
